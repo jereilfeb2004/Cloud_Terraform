@@ -21,10 +21,6 @@ pipeline {
                 sh 'terraform init'
                 // Validate Terraform configurations
                 sh 'terraform validate'
-                // Generate and display Terraform plan
-                sh 'terraform plan -out=tfplan'
-                sh 'terraform show -json tfplan > tfplan.json'
-                stash includes: 'tfplan.json', name: 'terraform_plan'
             }
         }
     }
