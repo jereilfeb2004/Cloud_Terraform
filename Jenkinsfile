@@ -11,8 +11,12 @@ pipeline {
         stage('Validate Git Pull') {
             steps {
                 // Run a command to validate Git pull
-                sh 'ls -al /var/jenkins_home/workplace/Devops_pipeline/*'
-                // You can add more commands here to validate the checkout
+                sh 'ls -al'
+                // Show ls -al result on console output
+                script {
+                    def lsResult = sh(script: 'ls -al', returnStdout: true).trim()
+                    echo "Result of 'ls -al':\n${lsResult}"
+                }
             }
         }
     }
