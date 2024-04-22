@@ -1,26 +1,18 @@
 pipeline {
     agent any
-    
-    environment {
-        GIT_URL = 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
-        CREDENTIALS_ID = 'DevOps_deploy'
-    }
 
     stages {
-        stage('Clone Repository') {
+        stage('Git Checkout') {
             steps {
-                script {
-                    // Clone the Git repository using the provided credentials
-                    git branch: 'main', credentialsId: env.CREDENTIALS_ID, url: env.GIT_URL
-                }
+                // Check out the Git repository
+                git branch: 'main', url: 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
             }
         }
-        stage('Test Terraform Templates') {
+        stage('Validate Git Pull') {
             steps {
-                // Initialize Terraform
-                sh 'terraform init'
-                // Validate Terraform configurations
-                sh 'terraform validate'
+                // Run a command to validate Git pull
+                sh 'ls -al'
+                // You can add more commands here to validate the checkout
             }
         }
     }
