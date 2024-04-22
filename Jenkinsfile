@@ -3,8 +3,8 @@ pipeline {
     
     // Define tools section
     tools {
-        // Define Git tool with a specific installation
-        git 'git'
+        // Use default Git installation
+        defaultGit 'Default'
     }
     
     environment {
@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Use the Git tool to clone the repository
+                // Use the default Git installation to clone the repository
                 git branch: 'main', url: 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
             }
         }
