@@ -28,19 +28,4 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            // Clean up workspace or other actions
-        }
-        success {
-            // Notify success or other actions
-            // Display Terraform plan
-            unstash 'terraform_plan'
-            echo 'Terraform Plan:'
-            sh 'cat tfplan.json'
-        }
-        failure {
-            // Notify failure or other actions
-        }
-    }
 }
