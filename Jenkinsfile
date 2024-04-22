@@ -1,28 +1,27 @@
 pipeline {
     agent any
 
+    environment {
+        GIT_REPO_URL = 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
+    }
+
     stages {
-        stage('Git Fetch') {
+        stage('Checkout') {
             steps {
-                // Fetch the latest changes and tags from the remote repository
-                git fetch --tags --force --progress https://github.com/jereilfeb2004/Cloud_Terraform.git +refs/heads/*:refs/remotes/origin/*
+                // Check out the Git repository using the defined URL
+                git branch: 'main', url: env.GIT_REPO_URL
             }
         }
-        stage('Git Checkout') {
+        stage('Terraform Init') {
             steps {
-                // Check out the Git repository
-                git branch: 'main', url: 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
+                // Initialize Terraform in the project directory
+                sh 'terraform init'
             }
         }
-        stage('Validate Git Pull') {
+        stage('Terraform Plan') {
             steps {
-                // Run a command to validate Git pull
-                sh 'ls -al'
-                // Show ls -al result on console output
-                script {
-                    def lsResult = sh(script: 'ls -al', returnStdout: true).trim()
-                    echo "Result of 'ls -al':\n${lsResult}"
-                }
+                // Generate a Terraform execution plan
+                sh 'terraform plan -out=tfplan'
             }
         }
     }
