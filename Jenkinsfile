@@ -11,7 +11,7 @@ pipeline {
         stage('Validate Git Pull') {
             steps {
                 // Run a command to validate Git pull
-                sh 'ls -al'
+                sh 'ls -al /var/jenkins_home/workplace/Devops_pipeline/*'
                 // You can add more commands here to validate the checkout
             }
         }
