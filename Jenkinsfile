@@ -1,31 +1,26 @@
 pipeline {
     agent any
     
+    environment {
+        GIT_URL = 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
+        CREDENTIALS_ID = 'DevOps_deploy'
+    }
+
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                // Checkout code from GitHub repository
                 script {
-                    // Define GitHub credentials
-                    def gitHubCredentials = credentials('DevOps_deploy')
-                    
-                    // Clone repository
-                    git branch: 'main', credentialsId: gitHubCredentials.id, url: 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
+                    // Clone the Git repository using the provided credentials
+                    git branch: 'main', credentialsId: env.CREDENTIALS_ID, url: env.GIT_URL
                 }
             }
         }
-        stage('Test') {
-            steps {
-                // Add your testing steps here
-                sh 'echo "Running tests..."'
-                // Add your test commands here
-            }
-        }
+        // Add more stages for your pipeline as needed
     }
+    // Optionally, you can add post-build actions, such as notifications or clean-up steps
     post {
         always {
-            // Clean up workspace
-            cleanWs()
+            // Clean up workspace or other actions
         }
     }
 }
