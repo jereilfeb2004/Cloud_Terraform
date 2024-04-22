@@ -1,6 +1,12 @@
 pipeline {
     agent any
     
+    // Define tools section
+    tools {
+        // Define Git tool with a specific installation
+        git 'git'
+    }
+    
     environment {
         TF_VERSION = 'latest' // Specify the Terraform version here
     }
@@ -8,8 +14,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Clone the repository
-                git 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
+                // Use the Git tool to clone the repository
+                git branch: 'main', url: 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
             }
         }
         
