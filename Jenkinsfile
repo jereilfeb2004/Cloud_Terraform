@@ -1,43 +1,31 @@
 pipeline {
     agent any
     
-    environment {
-        TF_VERSION = 'latest' // Specify the Terraform version here
-    }
-    
     stages {
         stage('Checkout') {
             steps {
-                // Clone the repository
-                git clone 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
-            }
-        }
-        
-        stage('Terraform Init') {
-            steps {
-                // Install Terraform
+                // Checkout code from GitHub repository
                 script {
-                    def tfHome = tool name: 'Terraform', type: 'hudson.plugins.terraform.TerraformInstallation'
-                    env.PATH = "${tfHome}/bin:${env.PATH}"
+                    // Define GitHub credentials
+                    def gitHubCredentials = credentials('DevOps_deploy')
+                    
+                    // Clone repository
+                    git branch: 'main', credentialsId: gitHubCredentials.id, url: 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
                 }
-                
-                // Initialize Terraform
-                sh 'terraform init'
             }
         }
-        
-        stage('Terraform Plan') {
+        stage('Test') {
             steps {
-                // Run Terraform plan
-                sh 'terraform plan'
+                // Add your testing steps here
+                sh 'echo "Running tests..."'
+                // Add your test commands here
             }
         }
     }
-    
     post {
         always {
-            // Clean up Terraform files
-            deleteDir()
+            // Clean up workspace
+            cleanWs()
         }
     }
 }
