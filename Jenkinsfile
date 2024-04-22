@@ -11,17 +11,36 @@ pipeline {
             steps {
                 script {
                     // Clone the Git repository using the provided credentials
-                    git branch: 'main', credentialsId: env.DevOps_deploy, url: env.https://github.com/jereilfeb2004/Cloud_Terraform.git'
-
+                    git branch: 'main', credentialsId: env.CREDENTIALS_ID, url: env.GIT_URL
                 }
             }
         }
-        // Add more stages for your pipeline as needed
+        stage('Test Terraform Templates') {
+            steps {
+                // Initialize Terraform
+                sh 'terraform init'
+                // Validate Terraform configurations
+                sh 'terraform validate'
+                // Generate and display Terraform plan
+                sh 'terraform plan -out=tfplan'
+                sh 'terraform show -json tfplan > tfplan.json'
+                stash includes: 'tfplan.json', name: 'terraform_plan'
+            }
+        }
     }
-    // Optionally, you can add post-build actions, such as notifications or clean-up steps
     post {
         always {
             // Clean up workspace or other actions
+        }
+        success {
+            // Notify success or other actions
+            // Display Terraform plan
+            unstash 'terraform_plan'
+            echo 'Terraform Plan:'
+            sh 'cat tfplan.json'
+        }
+        failure {
+            // Notify failure or other actions
         }
     }
 }
