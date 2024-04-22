@@ -21,7 +21,7 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 // Generate a Terraform execution plan
-                sh 'terraform plan -out=tfplan'
+                sh 'terraform plan'
             }
         }
     }
