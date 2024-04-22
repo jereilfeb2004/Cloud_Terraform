@@ -1,12 +1,6 @@
 pipeline {
     agent any
     
-    // Define tools section
-    tools {
-        // Use default Git installation
-        defaultGit 'Default'
-    }
-    
     environment {
         TF_VERSION = 'latest' // Specify the Terraform version here
     }
@@ -14,8 +8,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Use the default Git installation to clone the repository
-                git branch: 'main', url: 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
+                // Clone the repository
+                git clone 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
             }
         }
         
