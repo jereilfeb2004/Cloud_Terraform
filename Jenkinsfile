@@ -2,6 +2,12 @@ pipeline {
     agent any
 
     stages {
+        stage('Git Fetch') {
+            steps {
+                // Fetch the latest changes and tags from the remote repository
+                git fetch --tags --force --progress https://github.com/jereilfeb2004/Cloud_Terraform.git +refs/heads/*:refs/remotes/origin/*
+            }
+        }
         stage('Git Checkout') {
             steps {
                 // Check out the Git repository
