@@ -11,7 +11,8 @@ pipeline {
             steps {
                 script {
                     // Clone the Git repository using the provided credentials
-                    git branch: 'main', credentialsId: env.CREDENTIALS_ID, url: env.GIT_URL
+                    git branch: 'main', credentialsId: env.DevOps_deploy, url: env.https://github.com/jereilfeb2004/Cloud_Terraform.git'
+
                 }
             }
         }
