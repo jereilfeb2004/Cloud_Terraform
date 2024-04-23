@@ -1,29 +1,53 @@
 pipeline {
     agent any
-
+    
     environment {
-        GIT_REPO_URL = 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
+        TF_WORKING_DIR = 'terraform' // Directory where your Terraform files are located
+        AWS_REGION = 'ap-southeast-1'
     }
-
+    
     stages {
         stage('Checkout') {
             steps {
-                // Check out the Git repository using the defined URL
-                git branch: 'main', url: env.GIT_REPO_URL
+                git branch: 'main', url: 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
             }
         }
+        
         stage('Terraform Init') {
             steps {
-                // Initialize Terraform in the project directory
-                sh 'terraform init'
+                sh 'terraform init $TF_WORKING_DIR'
             }
         }
-        stage('Terraform Plan') {
-            steps {
-                // Generate a Terraform execution plan
-                sh 'terraform plan -out tfplan'
-                sh 'terraform show -no-color tfplan > tfplan.txt'
+        
+        stage('Terraform Apply') {
+            when {
+                branch 'main'
             }
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'Cloud_DevOps', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                    sh 'terraform apply -auto-approve $TF_WORKING_DIR'
+                }
+            }
+        }
+        
+        stage('Deploy to AWS') {
+            when {
+                branch 'main'
+            }
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'Cloud_DevOps', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                    // Add your AWS deployment steps here
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            slackSend color: '#36a64f', message: "Pipeline build successful!"
+        }
+        failure {
+            slackSend color: '#ff0000', message: "Pipeline build failed!"
         }
     }
 }
