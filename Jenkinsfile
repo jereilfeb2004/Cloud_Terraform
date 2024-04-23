@@ -1,34 +1,40 @@
 pipeline {
     agent any
-    
+
     environment {
-        AWS_ACCESS_KEY_ID = credentials('AWS_Key')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secrey')
         AWS_DEFAULT_REGION = 'ap-southeast-1'
     }
-    
+
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/jereilfeb2004/Cloud_Terraform.git'
-            }
-        }
-        
         stage('Terraform Init') {
             steps {
-                sh 'terraform init'
+                script {
+                    sh 'terraform init'
+                }
             }
         }
-        
+
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan -out=tfplan'
+                script {
+                    sh 'terraform plan -out=tfplan'
+                }
             }
         }
-        
+
         stage('Terraform Apply') {
             steps {
-                sh 'terraform apply -auto-approve tfplan'
+                script {
+                    sh 'terraform apply -auto-approve tfplan'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                sh 'terraform destroy -auto-approve'
             }
         }
     }
