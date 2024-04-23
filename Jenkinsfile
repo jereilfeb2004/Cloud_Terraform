@@ -16,27 +16,20 @@ pipeline {
         
         stage('Terraform Init') {
             steps {
-                sh 'cd your-terraform-repo && terraform init'
+                sh 'terraform init'
             }
         }
         
         stage('Terraform Plan') {
             steps {
-                sh 'cd your-terraform-repo && terraform plan -out=tfplan'
+                sh 'terraform plan -out=tfplan'
             }
         }
         
         stage('Terraform Apply') {
             steps {
-                sh 'cd your-terraform-repo && terraform apply -auto-approve tfplan'
+                sh 'terraform apply -auto-approve tfplan'
             }
-        }
-    }
-    
-    post {
-        always {
-            echo 'Cleaning up...'
-            sh 'cd your-terraform-repo && terraform destroy -auto-approve'
         }
     }
 }
