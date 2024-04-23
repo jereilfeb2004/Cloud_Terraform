@@ -1,3 +1,7 @@
+provider "aws" {
+  region = "us-southeast-1"  # Change the region as per your requirement
+}
+
 # Create VPC
 resource "aws_vpc" "my_vpc" {
   cidr_block = var.vpc_cidr_block
